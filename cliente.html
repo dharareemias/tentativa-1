@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>clientes</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="icon" href="img/letreiro.jpeg" type="image/x-icon">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        header, footer {
+            background-color: #ff0000;
+            color: white;
+            padding: 10px 0;
+        }
+
+        h1, h3 {
+            color: #ff0000;
+        }
+
+        .navbar {
+            background-color: #ff0000;
+        }
+
+        .navbar-nav .nav-link {
+            color: white;
+        }
+
+        .navbar-nav .nav-link:hover {
+            color: #d2e3fc;
+        }
+
+        main {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .servico-card {
+            background-color: white;
+            color: #333;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            margin-bottom: 15px;
+            padding: 20px;
+            width: 100%;
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+
+        .servico-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5);
+        }
+
+        .servico-titulo {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #ff0000;
+        }
+
+        .servico-card p {
+            margin: 5px 0;
+            color: #333;
+        }
+
+        .nenhum-servico {
+            text-align: center;
+            color: #888;
+        }
+
+        #menuButton {
+            background-color: #ff0000;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #menuButton:hover {
+            background-color: #cc0000;
+        }
+
+        .tabela input {
+            margin: 10px;
+        }
+
+        header nav button {
+            background-color: #333;
+            color: #ccc;
+        }
+    </style>
+</head>
+<body>
+    <header style="display: flex; flex-direction: column; background-color: #cc0000; justify-content: center; align-items: center;">
+        <h1 class="h4 mb-0" style="color: white;">Perfil do Cliente</h1>
+            <a href="index.html">
+                <button >Voltar para o Menu</button>
+            </a>
+        
+    </header>
+    <main>
+        <div class="container_vagas" style="background-color: #f2f4f7;">
+            <h1 class="text-center">Serviços que você contratou</h1>
+            <div class="vagas">
+                <div class="containder_vagas" id="vagas">
+                </div>
+            </div>
+        </div>
+        <div class="repositorios">
+            <div class="contender_repositorios">
+                <h3>Opções de serviços</h3>
+                <div class="lista_serviços d-flex flex-column">
+                    <a href="" class="nav-link">Conserto de computador</a>
+                    <a href="" class="nav-link">Formatação de computador</a>
+                    <a href="" class="nav-link">Limpeza de computador</a>
+                    <a href="" class="nav-link">Criação de sites</a>
+                    <a href="" class="nav-link">Criação de sistemas para empresas</a>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script>
+    // Função para mostrar o serviço selecionado na página de perfil do cliente
+    function mostrarServicoSelecionado() {
+        const servico = JSON.parse(sessionStorage.getItem('servicoSelecionado'));
+
+        if (servico) {
+            const vagaContainer = document.getElementById('vagas');
+            vagaContainer.innerHTML = `
+                <div class="servico-card">
+                    <p class="servico-titulo">Serviço: ${servico.servico}</p>
+                    <p><strong>Nome:</strong> ${servico.nome}</p>
+                    <p><strong>Telefone:</strong> ${servico.telefone}</p>
+                    <p><strong>Email:</strong> ${servico.email}</p>
+                    <p><strong>Valor:</strong> ${servico.valor}</p>
+                    <p><strong>Descrição:</strong> ${servico.descricao}</p>
+                </div>
+            `;
+        } else {
+            document.getElementById('vagas').innerHTML = '<p class="nenhum-servico">Nenhum serviço contratado.</p>';
+        }
+    }
+
+    // Chama a função para exibir o serviço ao carregar a página
+    window.onload = mostrarServicoSelecionado;
+    </script>
+</body>
+</html>

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>afiliados</title>
+    <link rel="icon" href="img/letreiro.jpeg" type="image/x-icon">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        header, footer {
+            background-color: #ff0000;
+            color: white;
+            padding: 20px 10px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+
+        header h1 {
+            font-size: 1.5em;
+        }
+
+        h1, h2 {
+            color: #ff0000;
+        }
+
+        .container_vagas {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 600px;
+            text-align: center;
+            color: #333;
+            margin: 10px auto;
+        }
+
+        .tabela input, .tabela textarea {
+            margin: 7px 0;
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 1em;
+        }
+
+        .tabela input:focus, .tabela textarea:focus {
+            border-color: #ff0000;
+            outline: none;
+            box-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+        }
+
+        header button {
+            background-color: #333;
+            color: #ccc;
+        }
+
+        button {
+            background-color: #ff0000;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            width: 48%;
+            margin: 5px 1%;
+        }
+
+        button:hover {
+            background-color: #cc0000;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
+        @media (max-width: 600px) {
+            header, footer {
+                text-align: center;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1 style="color: white;">Bem-vindo aos Afiliados</h1>
+            <a href="index.html">
+                <button>Voltar ao Menu</button>
+            </a>
+    </header>
+    <main style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
+        <div class="container_vagas">
+            <h2>Cadastre seus serviços</h2>
+            <div class="vagas">
+                <div class="tabela">
+                    <input type="text" id="servico" placeholder="Digite seu serviço">
+                    <input type="text" id="nome" placeholder="Digite seu nome">
+                    <div class="form-group">
+                        <input type="text" id="telefone" placeholder="Telefone">
+                        <input type="text" id="email" placeholder="E-mail">
+                    </div>
+                    <input type="text" id="valor" placeholder="Valor do serviço">
+                    <textarea id="descricao_servico" placeholder="Descreva seu serviço"></textarea>
+                    <div class="button-group">
+                        <button onclick="adicionarServico()">Enviar</button>
+                        <button onclick="limparDados()">Limpar Dados</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script>
+    const socket = new WebSocket('ws://localhost:8080');
+
+    socket.onopen = () => {
+        console.log('Conectado ao servidor WebSocket');
+    };
+
+    function adicionarServico() { 
+        const servico = document.getElementById('servico').value;
+        const nome = document.getElementById('nome').value;
+        const telefone = document.getElementById('telefone').value;
+        const email = document.getElementById('email').value;
+        const valor = document.getElementById('valor').value;
+        const descricao = document.getElementById('descricao_servico').value;
+
+        const servicoObj = { 
+            servico, 
+            nome, 
+            telefone, 
+            email, 
+            valor, 
+            descricao
+        };
+
+        socket.send(JSON.stringify({ action: 'addService', service: servicoObj }));
+        alert('Serviço adicionado com sucesso!');
+        limparInputs();
+    } 
+
+    function limparDados() { 
+        socket.send(JSON.stringify({ action: 'clearServices' }));
+        alert('Todos os dados foram limpos.');
+    }
+
+    function limparInputs() {
+        document.getElementById('servico').value = '';
+        document.getElementById('nome').value = '';
+        document.getElementById('telefone').value = '';
+        document.getElementById('email').value = '';
+        document.getElementById('valor').value = '';
+        document.getElementById('descricao_servico').value = '';
+    }
+    </script>
+</body>
+</html>

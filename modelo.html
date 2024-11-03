@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>app</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="endereço">
+            <a href="endereço.html">
+                <p id="endereco-texto">SELECIONE SEU ENDEREÇO</p>
+                <div style="margin-top: 10px;">
+                    <img src="img/seta.png" alt="" style="height: 30px; width: 30px;">
+                </div>
+            </a>
+        </div>
+        <div style="width: 15%; display: flex; justify-content: start; align-items: start;">
+            <a href="notificacao.html">
+                <img src="img/sino.png" alt="" style="height: 30px; width: 30px; margin-top: 10px;">
+            </a>
+        </div>
+    </header>
+    <main>
+        <div style="text-align: center;"> 
+            <button class="btn btn-danger" onclick="toggleServicos()">Serviços Rápidos</button> 
+            <div id="servicos" style="display: none;"> 
+                <h2>Opções de Serviços</h2> 
+                <div style="display: flex; justify-content: center;"> 
+                    <div>
+                        <a href="https://api.whatsapp.com/send?phone=558288873225&text=Olá, estou interessado no serviço de conserto de computador" class="btn btn-danger" style="display: flex; flex-direction: column; align-items: center; margin: 10px;"> 
+                         Conserto de Computador </a> 
+                        <a href="https://api.whatsapp.com/send?phone=558288873225&text=Olá, estou interessado no serviço de formatação de computador" class="btn btn-danger" style="display: flex; flex-direction: column; align-items: center; margin: 10px;"> 
+                            Formatação de Computador </a>
+                    </div> 
+                   <div>
+                    <a href="https://api.whatsapp.com/send?phone=558288873225&text=Olá, estou interessado no serviço de limpeza de computador" class="btn btn-danger" style="display: flex; flex-direction: column; align-items: center; margin: 10px;"> 
+                        Limpeza de Computador </a> 
+                    <a href="https://api.whatsapp.com/send?phone=558288873225&text=Olá, estou interessado no serviço de criação de sites" class="btn btn-danger" style="display: flex; flex-direction: column; align-items: center; margin: 10px;"> 
+                        Criação de Sites e sistemas </a>
+                   </div> 
+                </div> 
+            </div> 
+        </div>
+        <div style="width: 90%; background-color: rgb(255, 255, 255); margin-top: 10px;">
+            <div style="display: flex; justify-content: center; align-items: center; background-color: white;">
+                <img src="img/letreiro.jpeg" style="height: 150px; width: 300px;">
+            </div>
+        </div>
+        <div class="caixa_pesquisa">
+            <input type="text" placeholder="Pesquisar" class="pesquisa" id="procurar">
+            <button class="pesquisar" onclick="procurarVaga()">Pesquisar</button>
+        </div>
+        <div class="containder_vagas" id="vagas" style="display: flex; flex-direction: column; align-items: center; justify-items: center;">
+            <!-- Serviços serão adicionados aqui -->
+        </div>
+
+        <!-- Modal -->
+        <div id="myModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal()">&times;</span>
+                <div id="modalContent">
+                <!-- Conteúdo do modal será adicionado aqui -->
+                </div>
+                <button id="whatsappButton" style="background-color: #25D366; color: white; border: none; padding: 10px; border-radius: 5px; cursor: pointer;">Chamar no WhatsApp</button>
+            </div>
+        </div>
+    </main>
+    <footer>
+        <div style="background-color: aliceblue; border-radius: 100px; width: 60px; height: 70px;" >
+            <a href="cliente.html">
+                <img src="img/carrinho.png" alt="" style="height: 50px; width: 30px;">
+            </a>
+        </div>
+        <div style="background-color: aliceblue; border-radius: 100px; width: 60px; height: 90px;">
+            <a href="afiliado.html">
+                <img src="img/mais.png" alt="" style="width: 50px; height: 70px;">
+            </a>
+        </div>
+        <div style="background-color: aliceblue; border-radius: 100px; width: 40px; height: 70px;" >
+            <a href="https://www.instagram.com/sistemas.i9/">
+                <img src="img/instagram.png" alt="" style="height: 50px; width: 30px;">
+            </a>
+        </div>
+    </footer>
+
+    <script>
+        const socket = new WebSocket('ws://localhost:8080');
+
+        socket.onopen = () => {
+            console.log('Connected to WebSocket server');
+            socket.send(JSON.stringify({ action: 'fetchServices' }));
+        };
+
+        socket.onmessage = (event) => {
+            const message = JSON.parse(event.data);
+            if (message.action === 'updateServices') {
+                updateServiceList(message.services);
+            } else if (message.action === 'searchResults') {
+                updateServiceList(message.results);
+            }
+        };
+
+        function toggleServicos() {
+            const servicos = document.getElementById('servicos');
+            servicos.style.display = (servicos.style.display === 'none' || servicos.style.display === '') ? 'block' : 'none';
+        }
+
+        function mostrarServicos() {
+            socket.send(JSON.stringify({ action: 'fetchServices' }));
+        }
+
+        function procurarVaga() {
+            const procurarInput = document.getElementById('procurar').value.toLowerCase();
+            socket.send(JSON.stringify({ action: 'searchService', query: procurarInput }));
+        }
+
+        function updateServiceList(servicos) {
+            const vagaContainer = document.getElementById('vagas');
+            vagaContainer.innerHTML = '';
+
+            if (servicos.length > 0) {
+                servicos.forEach((servico, index) => {
+                    vagaContainer.innerHTML += `
+                        <div class="servico-card" onclick="mostrarDetalhes(${index})">
+                            <p class="servico-titulo">Serviço: ${servico.servico}</p>
+                            <p><strong>Nome:</strong> ${servico.nome}</p>
+                            <p><strong>Telefone:</strong> ${servico.telefone}</p>
+                            <p><strong>Email:</strong> ${servico.email}</p>
+                            <p><strong>Valor:</strong> ${servico.valor}</p>
+                            <p><strong>Descrição:</strong> ${servico.descricao}</p>
+                        </div>
+                    `;
+                });
+            } else {
+                vagaContainer.innerHTML = '<p class="nenhum-servico">Nenhum serviço cadastrado.</p>';
+            }
+        }
+
+        function mostrarDetalhes(index) {
+            const servicos = JSON.parse(localStorage.getItem('servicos')) || [];
+            const servico = servicos[index];
+
+            const modalContent = document.getElementById('modalContent');
+            modalContent.innerHTML = `
+                <p class="servico-titulo">Serviço: ${servico.servico}</p>
+                <p><strong>Nome:</strong> ${servico.nome}</p>
+                <p><strong>Telefone:</strong> ${servico.telefone}</p>
+                <p><strong>Email:</strong> ${servico.email}</p>
+                <p><strong>Valor:</strong> ${servico.valor}</p>
+                <p><strong>Descrição:</strong> ${servico.descricao}</p>
+            `;
+
+            document.getElementById('whatsappButton').onclick = function() {
+                const url = `https://api.whatsapp.com/send?phone=${servico.telefone}&text=Olá, estou interessado no serviço de ${servico.servico}`;
+                window.location.href = url;
+            };
+
+            document.getElementById('myModal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('myModal').style.display = 'none';
+        }
+
+        window.onload = function() {
+            mostrarServicos();
+            var enderecoSalvo = localStorage.getItem('enderecoSelecionado');
+            if (enderecoSalvo) {
+                document.getElementById('endereco-texto').textContent = enderecoSalvo;
+            }
+        };
+    </script>
+</body>
+</html>

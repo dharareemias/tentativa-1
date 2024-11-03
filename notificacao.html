@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>notificações</title>
+    <style>
+        body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    margin: 0;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #4285f4;
+    padding: 10px 20px;
+    color: #fff;
+}
+
+header .endereço a {
+    display: flex;
+    align-items: center;
+    color: #fff;
+    text-decoration: none;
+}
+
+header .endereço p {
+    margin: 0;
+    padding-right: 10px;
+    font-size: 14px;
+}
+
+main {
+    padding: 20px;
+    height: 80vh;
+    overflow-y: scroll;
+}
+
+.servico-card {
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    padding: 15px;
+    margin-bottom: 15px;
+}
+
+.servico-titulo {
+    font-weight: bold;
+    margin: 0 0 10px;
+}
+
+.servico-card button {
+    background-color: #ff4d4d;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+    </style>
+</head>
+<body>
+    <header>
+        <div class="endereço">
+            <a href="" style="display: flex;">
+                <p>CONHEÇA NOSSO SITE</p>
+            </a>
+        </div>
+        <div>
+            <a href="index.html">
+                <button>fechar</button>
+            </a>
+        </div>
+    </header>
+    <main id="main-content">
+        <div class="servico-card">
+            <p class="servico-titulo">titulo: </p>
+            <p><strong>Nome:</strong>Sistemas i9</p>
+            <p>menssagem: Seja bem vindo a nosso sistema!</p>
+            <p>é um prazer telo-a em nosso sistema</p>
+            <p>procure serviços ou fornecedores de qualquer lugar,</p>
+            <p>também pode divulgar seu serviço. Navegue, procure e conheça!</p>
+            <div>
+                <button onclick="excluirMensagem(this)">excluir</button>
+            </div>
+        </div>
+    </main>
+    <script>
+        // Função para carregar notificações
+        function carregarNotificacoes(notificacoes) {
+            const mainContent = document.getElementById('main-content');
+            notificacoes.forEach(notificacao => {
+                const card = document.createElement('div');
+                card.className = 'servico-card';
+                card.innerHTML = `
+                    <p class="servico-titulo">titulo: ${notificacao.titulo}</p>
+                    <p><strong>Nome:</strong>${notificacao.nome}</p>
+                    <p>menssagem: ${notificacao.mensagem}</p>
+                    <p>${notificacao.detalhes}</p>
+                    <div>
+                        <button onclick="excluirMensagem(this)">excluir</button>
+                    </div>
+                `;
+                mainContent.appendChild(card);
+            });
+        }
+
+        // Função para excluir mensagem
+        function excluirMensagem(button) {
+            button.closest('.servico-card').remove();
+        }
+
+        // Exemplo de dados de notificações
+        const notificacoes = [
+            {
+                titulo: '',
+                nome: 'Sistemas i9',
+                mensagem: 'Seja bem vindo a nosso sistema!',
+                detalhes: 'é um prazer telo-a em nosso sistema. procure serviços ou fornecedores de qualquer lugar, também pode divulgar seu serviço. Navegue, procure e conheça!'
+            },
+            // Adicione mais notificações conforme necessário
+        ];
+
+        // Carregar notificações ao carregar a página
+        window.onload = function() {
+            carregarNotificacoes(notificacoes);
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>endereço</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            margin-top: 20px;
+        }
+
+        .opções_endereço {
+            margin-top: 20px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .opções_endereço div {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .opções_endereço div:hover {
+            background-color: #f1f1f1;
+        }
+    </style>
+</head>
+<body>
+    <main class="container">
+        <div style="margin-top: 2px;">
+            <a href="index.html">
+                <button>fechar</button>
+            </a>
+           </div>
+           <div style="text-align: center;">
+            <h1>selecione seu endereço</h1>
+            <p>pode ser que ele não seja encontrado</p>
+            <p>ainda está sendo adicionado mais endereços</p>
+           </div>
+        <div class="d-flex justify-content-between align-items-center">
+            <div class="input-group" style="margin-top: 50px;">
+                <input type="text" class="form-control" id="enderecoInput" placeholder="Digite seu endereço">
+                <div class="input-group-append">
+                    <button class="btn btn-primary" onclick="procurarEndereco()">Procurar</button>
+                </div>
+            </div>
+        </div>
+        <div class="opções_endereço" id="opcoesEndereco"></div>
+    </main>
+
+    <script>
+        function fechar() {
+            // Função para fechar a página (pode ser personalizado conforme necessidade)
+            window.close();
+        }
+
+        function procurarEndereco() {
+            const input = document.getElementById('enderecoInput').value;
+            const enderecos = [
+                'Avenida Maceió, Centro',
+                'Rua Conselheiro Almeida, Centro',
+                'Avenida Rio Branco, Centro',
+                'Rua Ceará, Centro',
+                'Avenida Sen. Teotônio Vilela, Centro',
+                'Rua Padre Chagas, Centro',
+                'Avenida Centenário, Centro',
+                'Rua da Paz, Centro',
+                'Avenida Beira Mar, Pajuçara'
+             ];
+        
+
+
+            const resultados = enderecos.filter(endereco => endereco.toLowerCase().includes(input.toLowerCase()));
+            exibirOpcoes(resultados);
+        }
+
+        function exibirOpcoes(enderecos) {
+            const container = document.getElementById('opcoesEndereco');
+            container.innerHTML = '';
+            enderecos.forEach(endereco => {
+                const div = document.createElement('div');
+                div.innerText = endereco;
+                div.onclick = () => selecionarEndereco(endereco);
+                container.appendChild(div);
+            });
+        }
+
+        function selecionarEndereco(endereco) {
+            localStorage.setItem('enderecoSelecionado', endereco);
+            alert('Endereço selecionado: ' + endereco);
+            // Redirecionar ou realizar outra ação conforme necessidade
+        }
+    </script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.5/js/bootstrap.min.js"></script>
+</body>
+</html>
